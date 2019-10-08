@@ -2,7 +2,7 @@
 
 ### Getting Started
 
-Read this paper to understand more about the environment and description. [here](https://github.com/openai/gym/blob/master/gym/envs/toy_text/taxi.py).
+Read this [paper](https://github.com/openai/gym/blob/master/gym/envs/toy_text/taxi.py) to understand more about the environment and description.
 
 The repository contains three files:
 - `agent.py`:Contains the agent description.
