@@ -3,6 +3,7 @@ import sys
 import math
 import numpy as np
 import csv
+import json
 
 def interact(env, agent, num_episodes=200000, window=100):
     """ Monitor agent's performance.
@@ -59,27 +60,34 @@ def interact(env, agent, num_episodes=200000, window=100):
         print("\rEpisode {}/{} || Best average reward {}".format(i_episode, num_episodes, best_avg_reward), end="")
         sys.stdout.flush()
         # check if task is solved (according to OpenAI Gym)
-        if best_avg_reward >= -4.0 or i_episode==199999:
+        if best_avg_reward >= -2.0 or i_episode==199999:
             print('\nEnvironment solved in {} episodes.'.format(i_episode), end="")
             policy=dict()
-            w = csv.writer(open("Q_table.csv", "w"))
-            w1 = csv.writer(open("Policy.csv", "w"))
+            # w = csv.writer(open("Q_table.csv", "w"))
+            # w1 = csv.writer(open("Policy.csv", "w"))
+           
+                
+
             for key, val in Q.items():
-                w.writerow([key, val])
-                policy[key]=np.argmax(Q[key])
-                if(policy[key])==0:
-                    act="Left up"
-                elif(policy[key])==1:
-                    act = "Left down"
-                elif (policy[key]) == 2:
-                    act = "Right up"
-                elif (policy[key]) == 3:
-                    act = "Right down"
-                elif (policy[key]) == 4:
-                    act = "Rotate clock"
-                elif (policy[key]) == 5:
-                    act = "Rotate anticlock"
-                w1.writerow([key, act])
+                # w.writerow([key, val])
+                policy[str(key)]=int(np.argmax(Q[key]))
+                # if(policy[str(key)])==0:
+                #     act="Left up"
+                # elif(policy[str(key)])==1:
+                #     act = "Left down"
+                # elif (policy[str(key)]) == 2:
+                #     act = "Right up"
+                # elif (policy[str(key)]) == 3:
+                #     act = "Right down"
+                # elif (policy[str(key)]) == 4:
+                #     act = "Rotate clock"
+                # elif (policy[str(key)]) == 5:
+                #     act = "Rotate anticlock"
+                with open('Policy.txt', 'w') as pol:
+                    json.dump(policy, pol)
+                # with open('Q_table.txt', 'w') as table:
+                #     json.dump(Q, table)
+                #w1.writerow([key, act])
 
             break
         if i_episode == num_episodes: print('\n')

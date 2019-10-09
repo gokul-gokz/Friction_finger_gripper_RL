@@ -3,15 +3,17 @@ import math
 import scipy.optimize as opt
 from sympy import *
 import random
-
-FINGER_END = 10
-FINGER_START = 7
+import json
+THETA_LOW=-90
+THETA_HIGH=90
+FINGER_END = 8.5
+FINGER_START = 7.0
 PALM_WIDTH = 5
 TH1_MAX= 2.485 #142.5 degrees
 TH2_MIN= 0.65 #37.5
 FINGER_WIDTH=1
 K=0.1
-OBJECT_SIZE=2.5
+OBJECT_SIZE=0.8
 
 
 
@@ -97,7 +99,7 @@ def theta_conversion(left, right, action_name):
 
         return (solution)
 
-def limit_check(left_pos, right_pos, action,OBJECT_SIZE):
+def limit_check(left_pos, right_pos, orientation,action,OBJECT_SIZE):
     #Calculate next state
     if(action==0):
         left_position = left_pos+0.1
@@ -114,19 +116,20 @@ def limit_check(left_pos, right_pos, action,OBJECT_SIZE):
     if (action == 4):
         left_position = left_pos + OBJECT_SIZE
         right_position = right_pos - OBJECT_SIZE
+        orientation=orientation-90
     if (action == 5):
         left_position = left_pos - OBJECT_SIZE
         right_position = right_pos + OBJECT_SIZE
+        orientation=orientation+90
     if (action == 0 or action == 1 or action == 2 or action == 3):
-        if (
-                left_position <= FINGER_END and left_position >= FINGER_START and right_position <= FINGER_END and right_position >= FINGER_START):
+        if (left_position <= FINGER_END and left_position >= FINGER_START and right_position <= FINGER_END and right_position >= FINGER_START and orientation>=THETA_LOW and orientation<=THETA_HIGH):
             sol = theta_conversion(left_position, right_position, action)
             TH2_MAX = calculate_th2(TH1_MAX, left_position)
             TH1_MIN = calculate_th1(TH2_MIN, right_position)
             th1 = sol[0]
             th2 = sol[1]
 
-            if (th1 <= TH1_MAX and th1 >= TH1_MIN and th2 >= TH2_MIN and th2 <= TH2_MAX):
+            if (th1 <= TH1_MAX and th1 >= TH1_MIN and th2 >= TH2_MIN and th2 <= TH2_MAX ):
                 return True
             else:
 
@@ -135,7 +138,7 @@ def limit_check(left_pos, right_pos, action,OBJECT_SIZE):
             return False
 
     elif action == 4:
-        if (left_position<= FINGER_END and left_position >= FINGER_START and right_position <= FINGER_END and right_position >= FINGER_START):
+        if (left_position<= FINGER_END and left_position >= FINGER_START and right_position <= FINGER_END and right_position >= FINGER_START and orientation>=THETA_LOW and orientation<=THETA_HIGH):
             th1 = theta_conversion(left_position-OBJECT_SIZE, right_position+OBJECT_SIZE, action)
             th2 = calculate_th2(th1, left_position)
             TH2_MAX = calculate_th2(TH1_MAX, left_position)
@@ -152,7 +155,7 @@ def limit_check(left_pos, right_pos, action,OBJECT_SIZE):
             return False
 
     elif action == 5:
-        if ( left_position<= FINGER_END and left_position>= FINGER_START and right_position  <= FINGER_END and right_position>= FINGER_START):
+        if ( left_position<= FINGER_END and left_position>= FINGER_START and right_position  <= FINGER_END and right_position>= FINGER_START and orientation>=THETA_LOW and orientation<=THETA_HIGH):
             th2 = theta_conversion(left_position+OBJECT_SIZE, right_position-OBJECT_SIZE, action)
             th1 = calculate_th1(th2, right_position)
             TH2_MAX = calculate_th2(TH1_MAX, left_position)
@@ -169,18 +172,22 @@ def limit_check(left_pos, right_pos, action,OBJECT_SIZE):
 
 #Friction Finger gripper environment
 class Friction_finger_env:
-    def __init__(self,start=(7,7),object_s=2.5,low_limit=FINGER_START,high_limit=FINGER_END):
+    def __init__(self,start=(7.0,7.0,0),action_table_load=true,object_s=OBJECT_SIZE,low_limit=FINGER_START,high_limit=FINGER_END):
         self.finger_low_limit=low_limit
         self.finger_high_limit=high_limit
         self.current_state=self.update_start_state(start)
         self.object_size=object_s
         self.actions = (0,1,2,3,4,5)
-        self.valid_Actions = self.calculate_action_table()
+        if action_table_load:
+            self.valid_Actions = self.calculate_action_table()
+        else:
+            with open('Valid_action_table.txt') as json_file:
+                self.valid_Actions = json.load(json_file)
         self.next_state=(0,0)
         self.reward=0
         self.done=0
         self.prev_action=-1
-        self.goal=(7.4,10.0)
+        self.goal=(7.2,7.2,90)
 
         #Action list
         # 1 -> Left slide up
@@ -192,43 +199,57 @@ class Friction_finger_env:
 
 
     def calculate_action_table(self):
+        possible_theta=[-90,0,90]
         action_table=dict()
         i=self.finger_low_limit
         while(i<=self.finger_high_limit):
             j=self.finger_low_limit
             while (j <= self.finger_high_limit):
-                s=(i,j)
-                action=[]
-                for a in self.actions:
-                    if (limit_check(s[0], s[1], a, self.object_size)):
-                     action.append(a)
-                action_table[s]=action
+                for theta in possible_theta:
+
+                    s=(i,j,theta)
+                    print(s)
+                    action=[]
+                    for a in self.actions:
+                        if (limit_check(s[0], s[1], s[2], a, self.object_size)):
+                         action.append(a)
+                    action_table[str(s)]=action
                 j=round(j+0.1,10)  #round function is used to approximate the float values so that they can be compared
             i=round(i+0.1,10)
+        print(len(action_table))
+        with open('Valid_action_table.txt', 'w') as act:
+            json.dump(action_table, act)
         return action_table
 
 
     def calculate_next_state(self,action):
-        if action in self.valid_Actions[self.current_state]:
-            if action == 0:
-                return(round(self.current_state[0]+0.1,10),round(self.current_state[1],10))
+        if 1:
 
-            elif action == 1:
-                return(round(self.current_state[0]-0.1,10),round(self.current_state[1],10))
 
-            elif action == 2:
-                return(round(self.current_state[0],10),round(self.current_state[1]+0.1,10))
 
-            elif action == 3:
-                return(round(self.current_state[0],10),round(self.current_state[1]-0.1,10))
+            if action in self.valid_Actions[str(self.current_state)]:
+                
+                if action == 0:
+                    return(round(self.current_state[0]+0.1,10),round(self.current_state[1],10),self.current_state[2])
 
-            elif action == 4:
-                return(round(self.current_state[0]+self.object_size,10),round(self.current_state[1]-self.object_size,10))
+                elif action == 1:
+                    return(round(self.current_state[0]-0.1,10),round(self.current_state[1],10),self.current_state[2])
 
-            elif action == 5:
-                return(round(self.current_state[0]-self.object_size,10),round(self.current_state[1]+self.object_size,10))
+                elif action == 2:
+                    return(round(self.current_state[0],10),round(self.current_state[1]+0.1,10),self.current_state[2])
+
+                elif action == 3:
+                    return(round(self.current_state[0],10),round(self.current_state[1]-0.1,10),self.current_state[2])
+
+                elif action == 4:
+                    return(round(self.current_state[0]+self.object_size,10),round(self.current_state[1]-self.object_size,10),self.current_state[2]-90)
+
+                elif action == 5:
+                    return(round(self.current_state[0]-self.object_size,10),round(self.current_state[1]+self.object_size,10),self.current_state[2]+90)
+            else:
+
+                return self.current_state
         else:
-
             return self.current_state
 
 
@@ -252,7 +273,9 @@ class Friction_finger_env:
         self.done = 0
         self.prev_action = 0
         #self.current_state= (7.0+int(int(np.random.random()*10)/20.0),7.0+int(int(np.random.random()*10)/20.0))
-        self.current_state = (random.randrange(FINGER_START*10,FINGER_END*10)/10,random.randrange(FINGER_START*10,FINGER_END*10)/10)
+        theta=[-90,0,90]
+        self.current_state = (random.randrange(FINGER_START*10,FINGER_END*10)/10,random.randrange(FINGER_START*10,FINGER_END*10)/10,np.random.choice(theta))
+        # self.goal=  (random.randrange(FINGER_START*10,FINGER_END*10)/10,random.randrange(FINGER_START*10,FINGER_END*10)/10)
         return self.current_state
 
     def step(self,action):
@@ -266,14 +289,14 @@ class Friction_finger_env:
 
 
 if __name__ == '__main__':
-    a=env((7.0,7.0))
-    print(a.valid_Actions[(7.0,7.0)])
-    print(a.step(2))
-    print(a.step(3))
-    print(a.step(1))
-    print(a.step(1))
-    print(a.step(5))
-    print(a.reset())
+    a=env((7.0,7.0,0))
+    # print(a.valid_Actions[(7.0,7.0)])
+    # print(a.step(2))
+    # print(a.step(3))
+    # print(a.step(1))
+    # print(a.step(1))
+    # print(a.step(5))
+    # print(a.reset())
 
 
 

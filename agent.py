@@ -12,9 +12,9 @@ class Agent:
         - nA: number of actions available to the agent
         """
         self.nA = nA
-        self.Q = defaultdict(lambda: np.zeros(self.nA))
+        self.Q = defaultdict(lambda: [0,0,0,0,0,0])    #Since we are storing in a json file, using a list instead of numpy arrays
         self.epsilon=1.0
-        self.epsilon_decay=0.0001
+        self.epsilon_decay=0.00001
         self.epsilon_min=0.00003
         self.alpha=0.24
         self.gamma=0.9
