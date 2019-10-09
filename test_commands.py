@@ -11,15 +11,15 @@ print(random.randrange(70,90)/10)
 a=defaultdict(lambda: [0,0])
 a['(1,2)'][0]=3
 a['(2,3)'][0]=4
+print(len(list(range(100, 200))))
 
-
-with open('person.txt', 'w') as json_file:
-  json.dump(a, json_file)
-
-with open('person.txt') as json_file:
-    data = json.load(json_file)
-    print(data['(1,2)'])
-
-a=str((1,2))
-
-print(type(a))
+# with open('person.txt', 'w') as json_file:
+#   json.dump(a, json_file)
+#
+# with open('person.txt') as json_file:
+#     data = json.load(json_file)
+#     print(data['(1,2)'])
+#
+# a=str((1,2))
+#
+# print(type(a))

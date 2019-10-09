@@ -4,8 +4,9 @@ import math
 import numpy as np
 import csv
 import json
-
-def interact(env, agent, num_episodes=200000, window=100):
+from matplotlib import pyplot as plt
+max_steps=1000
+def interact(env, agent, num_episodes=100000, window=100):
     """ Monitor agent's performance.
     
     Params
@@ -32,6 +33,7 @@ def interact(env, agent, num_episodes=200000, window=100):
         state = env.reset()
         # initialize the sampled reward
         samp_reward = 0
+        step_num=0
         while True:
             # agent selects an action
             action = agent.select_action(state)
@@ -44,11 +46,13 @@ def interact(env, agent, num_episodes=200000, window=100):
             samp_reward += reward
             # update the state (s <- s') to next time step
             state = next_state
-            if done:
+            if done or step_num>=max_steps:
                 # save final sampled reward
+                print("steps=",step_num)
                 samp_rewards.append(samp_reward)
                 break
-        if (i_episode >= 100):
+            step_num=step_num+1
+        if (i_episode >= 1):
             # get average reward from last 100 episodes
             avg_reward = np.mean(samp_rewards)
             # append to deque
@@ -57,10 +61,14 @@ def interact(env, agent, num_episodes=200000, window=100):
             if avg_reward > best_avg_reward:
                 best_avg_reward = avg_reward
         # monitor progress
+
         print("\rEpisode {}/{} || Best average reward {}".format(i_episode, num_episodes, best_avg_reward), end="")
         sys.stdout.flush()
         # check if task is solved (according to OpenAI Gym)
-        if best_avg_reward >= -2.0 or i_episode==199999:
+        if best_avg_reward >= -20.0 or i_episode==num_episodes:
+            print(len(avg_rewards))
+            print(len(list(range(0, 200))))
+
             print('\nEnvironment solved in {} episodes.'.format(i_episode), end="")
             policy=dict()
             # w = csv.writer(open("Q_table.csv", "w"))
@@ -88,8 +96,10 @@ def interact(env, agent, num_episodes=200000, window=100):
                 # with open('Q_table.txt', 'w') as table:
                 #     json.dump(Q, table)
                 #w1.writerow([key, act])
-
-            break
+            plt.bar(list(range(0, num_episodes)), avg_rewards)
+            plt.plot(avg_rewards)
+            plt.show()
+            #break
         if i_episode == num_episodes: print('\n')
     print
     return avg_rewards, best_avg_reward,policy

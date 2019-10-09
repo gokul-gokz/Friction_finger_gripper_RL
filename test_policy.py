@@ -35,15 +35,16 @@ with open('policy.txt') as json_file:
     # print(data['(1,2)'])
 
 #Test_cases
-start_state=(8.0,8.0,90)
+start_state=(7.2,7.2,-90)
 env1=Friction_finger_env(start_state,False)
 action=policy[str(start_state)]
 i=0
 print("\n")
-while(i<100):
+while(i<150):
     next_state,reward,done=env1.step(action)
     print(next_state,action)
     action=policy[str(next_state)]
     i=i+1
     if(done):
+        print("No of steps",i)
         break

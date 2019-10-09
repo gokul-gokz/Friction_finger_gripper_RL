@@ -6,14 +6,14 @@ import random
 import json
 THETA_LOW=-90
 THETA_HIGH=90
-FINGER_END = 8.5
+FINGER_END = 12.0
 FINGER_START = 7.0
 PALM_WIDTH = 5
 TH1_MAX= 2.485 #142.5 degrees
 TH2_MIN= 0.65 #37.5
 FINGER_WIDTH=1
 K=0.1
-OBJECT_SIZE=0.8
+OBJECT_SIZE=2.5
 
 
 
@@ -128,11 +128,12 @@ def limit_check(left_pos, right_pos, orientation,action,OBJECT_SIZE):
             TH1_MIN = calculate_th1(TH2_MIN, right_position)
             th1 = sol[0]
             th2 = sol[1]
-
-            if (th1 <= TH1_MAX and th1 >= TH1_MIN and th2 >= TH2_MIN and th2 <= TH2_MAX ):
-                return True
+            if(th1 is not None and th2 is not None):
+                if (th1 <= TH1_MAX and th1 >= TH1_MIN and th2 >= TH2_MIN and th2 <= TH2_MAX ):
+                    return True
+                else:
+                    return False
             else:
-
                 return False
         else:
             return False
@@ -144,12 +145,14 @@ def limit_check(left_pos, right_pos, orientation,action,OBJECT_SIZE):
             TH2_MAX = calculate_th2(TH1_MAX, left_position)
             TH1_MIN = calculate_th1(TH2_MIN, right_position)
 
+            if(th1 is not None and th2 is not None):
+                if (th1 <= TH1_MAX and th1 >= TH1_MIN and th2 >= TH2_MIN and th2 <= TH2_MAX):
 
-            if (th1 <= TH1_MAX and th1 >= TH1_MIN and th2 >= TH2_MIN and th2 <= TH2_MAX):
+                    return True
+                else:
 
-                return True
+                    return False
             else:
-
                 return False
         else:
             return False
@@ -161,11 +164,13 @@ def limit_check(left_pos, right_pos, orientation,action,OBJECT_SIZE):
             TH2_MAX = calculate_th2(TH1_MAX, left_position)
             TH1_MIN = calculate_th1(TH2_MIN, right_position)
 
+            if (th1 is not None and th2 is not None):
+                if (th2 >= TH2_MIN and th2 <= TH2_MAX and th1 <= TH1_MAX and th1 >= TH1_MIN):
+                    return True
+                else:
 
-            if (th2 >= TH2_MIN and th2 <= TH2_MAX and th1 <= TH1_MAX and th1 >= TH1_MIN):
-                return True
+                    return False
             else:
-
                 return False
         else:
             return False
@@ -230,6 +235,7 @@ class Friction_finger_env:
             if action in self.valid_Actions[str(self.current_state)]:
                 
                 if action == 0:
+                    #print("Action 0 called")
                     return(round(self.current_state[0]+0.1,10),round(self.current_state[1],10),self.current_state[2])
 
                 elif action == 1:
@@ -247,9 +253,10 @@ class Friction_finger_env:
                 elif action == 5:
                     return(round(self.current_state[0]-self.object_size,10),round(self.current_state[1]+self.object_size,10),self.current_state[2]+90)
             else:
-
+                #print("not valid action")
                 return self.current_state
         else:
+            #print("state not in qtable")
             return self.current_state
 
 
@@ -274,7 +281,9 @@ class Friction_finger_env:
         self.prev_action = 0
         #self.current_state= (7.0+int(int(np.random.random()*10)/20.0),7.0+int(int(np.random.random()*10)/20.0))
         theta=[-90,0,90]
-        self.current_state = (random.randrange(FINGER_START*10,FINGER_END*10)/10,random.randrange(FINGER_START*10,FINGER_END*10)/10,np.random.choice(theta))
+        self.start_state = (random.randrange(FINGER_START*10,FINGER_END*10)/10,random.randrange(FINGER_START*10,FINGER_END*10)/10,np.random.choice(theta))
+        self.current_state=self.start_state
+        print("start=",self.start_state)
         # self.goal=  (random.randrange(FINGER_START*10,FINGER_END*10)/10,random.randrange(FINGER_START*10,FINGER_END*10)/10)
         return self.current_state
 
