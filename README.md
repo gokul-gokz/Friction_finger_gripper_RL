@@ -2,7 +2,7 @@
 
 ### Getting Started
 
-Read this [paper](https://github.com/openai/gym/blob/master/gym/envs/toy_text/taxi.py) to understand more about the environment and description.
+Read this [paper](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/Friction_Finger_Gripper_ICRA_2020%20(26).pdf) to understand more about the environment and description.
 
 The repository contains three files:
 - `agent.py`:Contains the agent description.
