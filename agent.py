@@ -64,6 +64,7 @@ class Agent:
         """
         #print("action",action)
         action_prob=self.get_action_probs(next_state)
+        error=
         self.Q[str(state)][action] = self.Q[str(state)][action]+ self.alpha*(reward+self.gamma*(np.dot(self.Q[str(next_state)],action_prob))-self.Q[str(state)][action])
         self.update_epsilon()
         return self.Q

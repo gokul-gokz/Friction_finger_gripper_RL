@@ -6,7 +6,7 @@ import csv
 import json
 from matplotlib import pyplot as plt
 max_steps=1000
-def interact(env, agent, num_episodes=200000, window=100):
+def interact(env, agent, num_episodes=10000, window=100):
     """ Monitor agent's performance.
     
     Params
@@ -28,12 +28,15 @@ def interact(env, agent, num_episodes=200000, window=100):
     # initialize monitor for most recent rewards
     samp_rewards = deque(maxlen=window)
     # for each episode
+    errors = []
     for i_episode in range(1, num_episodes+1):
         # begin the episode
         state = env.reset()
         # initialize the sampled reward
         samp_reward = 0
         step_num=0
+        mean_error=0
+
         while True:
             # agent selects an action
             action = agent.select_action(state)
@@ -41,17 +44,22 @@ def interact(env, agent, num_episodes=200000, window=100):
             next_state, reward, done  = env.step(action)
             #print(next_state, reward, done)
             # agent performs internal updates based on sampled experience
-            Q=agent.step(state, action, reward, next_state, done)
+            Q,error=agent.step(state, action, reward, next_state, done)
             # update the sampled reward
             samp_reward += reward
             # update the state (s <- s') to next time step
             state = next_state
+            step_num = step_num + 1
+            #calculate mean error
+            mean_error=(mean_error*(step_num-1)+ error)/step_num
+
             if done or step_num>=max_steps:
                 # save final sampled reward
+                errors.append(mean_error)
                 print("steps=",step_num)
                 samp_rewards.append(samp_reward)
                 break
-            step_num=step_num+1
+
         if (i_episode >= 1):
             # get average reward from last 100 episodes
             avg_reward = np.mean(samp_rewards)
@@ -98,10 +106,12 @@ def interact(env, agent, num_episodes=200000, window=100):
             with open('Q_table.txt', 'w') as table:
                 json.dump(Q_t, table)
                 #w1.writerow([key, act])
-            plt.bar(list(range(0, num_episodes)), avg_rewards)
-            plt.plot(avg_rewards)
-            plt.show()
+            # plt.bar(list(range(0, num_episodes)), avg_rewards)
+            # plt.plot(avg_rewards)
+            # plt.show()
             #break
         if i_episode == num_episodes: print('\n')
     print
+    plt.plot(errors)
+    plt.show()
     return avg_rewards, best_avg_reward,policy

@@ -193,7 +193,7 @@ class Friction_finger_env:
         self.reward=0
         self.done=0
         self.prev_action=-1
-        self.goal=(7.2,7.2,0)
+        self.goal=(7.2,7.2,90)
 
         #Action list
         # 1 -> Left slide up
@@ -249,10 +249,10 @@ class Friction_finger_env:
             low_state = self.calculate_low_level_state(3)
             return(low_state[0],low_state[1],low_state[2],'hl')
         elif high_level_action=='l' and self.current_state[3]=='hh':
-            low_state = self.calculate_low_level_state(4)
+            low_state = self.calculate_low_level_state(5)
             return(low_state[0],low_state[1],low_state[2],'hh')
         elif high_level_action=='r' and self.current_state[3]=='hh':
-            low_state = self.calculate_low_level_state(5)
+            low_state = self.calculate_low_level_state(4)
             return(low_state[0],low_state[1],low_state[2],'hh')
         elif high_level_action == 'lh':
             return (self.current_state[0],self.current_state[1],self.current_state[2], 'lh')
@@ -308,8 +308,8 @@ class Friction_finger_env:
         self.prev_action = 0
         #self.current_state= (7.0+int(int(np.random.random()*10)/20.0),7.0+int(int(np.random.random()*10)/20.0))
         theta=[-90,0,90]
-        swithching_action=['lh','hl']
-        self.start_state = (random.randint(FINGER_START*10,FINGER_END*10)/10.0,random.randint(FINGER_START*10,FINGER_END*10)/10.0,0,np.random.choice(swithching_action))
+        swithching_action=['lh','hl','hh']
+        self.start_state = (random.randint(FINGER_START*10,FINGER_END*10)/10.0,random.randint(FINGER_START*10,FINGER_END*10)/10.0,np.random.choice(theta),np.random.choice(swithching_action))
         self.current_state=self.start_state
         print("start=",self.start_state)
         # self.goal=  (random.randrange(FINGER_START*10,FINGER_END*10)/10,random.randrange(FINGER_START*10,FINGER_END*10)/10)

@@ -253,13 +253,13 @@ def plot(L,R,theta,A):
 
         if(A[i]==4 ):
             #print(i)
-            if i==0:
-                j=i
-            else:
-                j=i-1
+            # if i==0:
+            #     j=i
+            # else:
+            #     j=i-1
 
             # x_r,y_r,t1,t2=xy_rotation_clockwise(L[i]-OBJECT_SIZE,R[i]+OBJECT_SIZE,theta[j][0],theta[j][1],theta[i][0],FINGER_WIDTH,OBJECT_SIZE,PALM_WIDTH)
-            x_r, y_r, t1, t2 = xy_rotation_clockwise(L[i] , R[i] , theta[j][0], theta[j][1],
+            x_r, y_r, t1, t2 = xy_rotation_clockwise(L[i] , R[i] , theta[i-1][0], theta[i-1][1],
                                                      theta[i][0], FINGER_WIDTH, OBJECT_SIZE, PALM_WIDTH)
 
 
@@ -272,15 +272,15 @@ def plot(L,R,theta,A):
             OFFSET += len(x_r)
         elif (A[i] == 5):
             #print(i)
-            if i == 0:   #if the rotate action is the first action
-                j = i
-            else:           #if the rotate actions is the last
-                j = i - 1
+            # if i == 0:   #if the rotate action is the first action
+            #     j = i
+            # else:           #if the rotate actions is the last
+            #     j = i - 1
 
 
             # x_r, y_r,t1,t2 = xy_rotation_anticlockwise(L[i]+OBJECT_SIZE, R[i]-OBJECT_SIZE, theta[j][0], theta[j][1],theta[i][0],FINGER_WIDTH,OBJECT_SIZE,PALM_WIDTH)
-            x_r, y_r, t1, t2 = xy_rotation_anticlockwise(L[i] , R[i], theta[j][0],
-                                                         theta[j][1], theta[i][0], FINGER_WIDTH, OBJECT_SIZE,
+            x_r, y_r, t1, t2 = xy_rotation_anticlockwise(L[i] , R[i], theta[i-1][0],
+                                                         theta[i-1][1], theta[i][0], FINGER_WIDTH, OBJECT_SIZE,
                                                          PALM_WIDTH)
             # print "------------------------------------------------------------------------------"
             # print "l=",L[i]+OBJECT_SIZE
@@ -300,9 +300,9 @@ def plot(L,R,theta,A):
             th1.append(theta[i][0])
             th2.append(theta[i][1])
 
-            # print  "L=",L[i],"R=",R[i]
-            # print "theta1=",theta[i][0],"theta2=",theta[i][1]
-            # print "x=",x,"y=",y
+            # print("L=",L[i],"R=",R[i])
+            # print("theta1=",theta[i][0],"theta2=",theta[i][1])
+            # print("x=",x,"y=",y)
 
     if(len(X)>0):
         global closed_list
@@ -332,7 +332,7 @@ def plot(L,R,theta,A):
 
         plt.plot(X[len(X)-1],Y[len(Y)-1],'g*',label='Goal state',markersize=12)
 
-        plt.plot(X[1],Y[1],'go',label='Start state',markersize=12)
+        plt.plot(X[0],Y[0],'go',label='Start state',markersize=12)
 
         plt.xlim([-10, 10])
         plt.ylim([0, 15])
@@ -393,21 +393,39 @@ with open('Policy.txt') as json_file:
     # print(data['(1,2)'])
 
 #Test_cases
-start_state=(11.0, 11.0, 0, 'lh')
+start_state=(11.0, 11.0, -90, 'lh')
 env1=Friction_finger_env(start_state,False)
+current_state=start_state
 action=policy[str(start_state)]
 i=0
 print("\n")
 states=[]
 actions=[]
 actions.append(action)
-states.append(start_state)
+states.append(current_state)
 while(i<200):
+    if action == 0 and current_state[3] == 'lh':
+        low_level_action=1
+    elif action == 1 and current_state[3] == 'lh':
+        low_level_action=0
+    elif action == 0 and current_state[3] == 'hl':
+        low_level_action=2
+    elif action == 1 and current_state[3] == 'hl':
+        low_level_action=3
+    elif action == 1 and current_state[3] == 'hh':
+        low_level_action=4
+    elif action == 0 and current_state[3] == 'hh':
+        low_level_action=5
+    else:
+        low_level_action=None
+
     next_state,reward,done=env1.step(action)
     # print(next_state,action)
     action=policy[str(next_state)]
-    states.append(next_state)
-    actions.append(action)
+    #calculate the low level action
+    if(low_level_action is not None):
+        states.append(next_state)
+        actions.append(action)
     print(next_state, action)
     i=i+1
     if(done):
