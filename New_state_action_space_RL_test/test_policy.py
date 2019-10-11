@@ -355,11 +355,11 @@ def plot(L,R,theta,A):
 
 
         # function to show the plot
-        Filename='Test_results/data'+'.png'
+        Filename='data'+'.png'
         plt.show()
-        plt.savefig(Filename)
-        plt.clf()
-        plt.close()
+        # plt.savefig(Filename)
+        # plt.clf()
+        # plt.close()
 # #Load policy
 # policy=dict()
 # reader = csv.reader(open('Policy.csv'))
@@ -386,14 +386,14 @@ def plot(L,R,theta,A):
 #
 #         policy[(key1,key2)]=val
 
-with open('C:\Friction_finger_gripper_RL\Test_results\Final_test_smooth\Policy.txt') as json_file:
+with open('Policy.txt') as json_file:
 #with open('Policy.txt') as json_file:
     policy = json.load(json_file)
     
     # print(data['(1,2)'])
 
 #Test_cases
-start_state=(8.5,7.3,-90)
+start_state=(11.0, 11.0, 0, 'lh')
 env1=Friction_finger_env(start_state,False)
 action=policy[str(start_state)]
 i=0

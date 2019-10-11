@@ -3,8 +3,8 @@ from monitor import interact
 from env import Friction_finger_env
 import numpy as np
 
-env = Friction_finger_env((11.0,11.0,90.0),False)
-agent = Agent(6,True)
+env = Friction_finger_env((11.0,11.0,0,'lh'),False)
+agent = Agent(4,True)
 avg_rewards, best_avg_reward,policy = interact(env, agent)
 
 #Test_cases

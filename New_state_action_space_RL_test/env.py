@@ -177,22 +177,23 @@ def limit_check(left_pos, right_pos, orientation,action,OBJECT_SIZE):
 
 #Friction Finger gripper environment
 class Friction_finger_env:
-    def __init__(self,start=(7.0,7.0,0),action_table_load=true,object_s=OBJECT_SIZE,low_limit=FINGER_START,high_limit=FINGER_END):
+    def __init__(self,start=(7.0,7.0,0,'lh'),action_table_load=true,object_s=OBJECT_SIZE,low_limit=FINGER_START,high_limit=FINGER_END):
         self.finger_low_limit=low_limit
         self.finger_high_limit=high_limit
         self.current_state=self.update_start_state(start)
         self.object_size=object_s
+        self.high_level_actions=('l','r','hh','hl','lh')
         self.actions = (0,1,2,3,4,5)
         if action_table_load:
             self.valid_Actions = self.calculate_action_table()
         else:
             with open('Valid_action_table.txt') as json_file:
                 self.valid_Actions = json.load(json_file)
-        self.next_state=(0,0)
+        self.next_state=(0,0,0,0)
         self.reward=0
         self.done=0
         self.prev_action=-1
-        self.goal=(7.2,7.2,90)
+        self.goal=(7.2,7.2,0)
 
         #Action list
         # 1 -> Left slide up
@@ -227,52 +228,78 @@ class Friction_finger_env:
         return action_table
 
 
-    def calculate_next_state(self,action):
-        if 1:
+    def calculate_next_state(self,high_level_action):
 
+        # l - Actuator left
+        # h - Actuator Right
+        # hh - High High friction
+        # hl - High Low friction
+        # lh - Low High friction
+        #print(self.current_state)
+        if high_level_action=='r' and self.current_state[3]=='lh':
+            low_state = self.calculate_low_level_state(0)
+            return(low_state[0],low_state[1],low_state[2],'lh')
+        elif high_level_action=='l' and self.current_state[3]=='lh':
+            low_state = self.calculate_low_level_state(1)
+            return(low_state[0],low_state[1],low_state[2],'lh')
+        elif high_level_action=='l' and self.current_state[3]=='hl':
+            low_state = self.calculate_low_level_state(2)
+            return(low_state[0],low_state[1],low_state[2],'hl')
+        elif high_level_action=='r' and self.current_state[3]=='hl':
+            low_state = self.calculate_low_level_state(3)
+            return(low_state[0],low_state[1],low_state[2],'hl')
+        elif high_level_action=='l' and self.current_state[3]=='hh':
+            low_state = self.calculate_low_level_state(4)
+            return(low_state[0],low_state[1],low_state[2],'hh')
+        elif high_level_action=='r' and self.current_state[3]=='hh':
+            low_state = self.calculate_low_level_state(5)
+            return(low_state[0],low_state[1],low_state[2],'hh')
+        elif high_level_action == 'lh':
+            return (self.current_state[0],self.current_state[1],self.current_state[2], 'lh')
+        elif high_level_action == 'hl':
 
+            return (self.current_state[0],self.current_state[1],self.current_state[2], 'hl')
+        elif high_level_action == 'hh':
+            return (self.current_state[0],self.current_state[1],self.current_state[2], 'hh')
 
-            if action in self.valid_Actions[str(self.current_state)]:
-                
-                if action == 0:
-                    #print("Action 0 called")
-                    return(round(self.current_state[0]+0.1,10),round(self.current_state[1],10),self.current_state[2])
+    def calculate_low_level_state(self,action):
+        if action in self.valid_Actions[str(self.current_state[0:3])]:
 
-                elif action == 1:
-                    return(round(self.current_state[0]-0.1,10),round(self.current_state[1],10),self.current_state[2])
+            if action == 0:
+                #print("Action 0 called")
+                return(round(self.current_state[0]+0.1,10),round(self.current_state[1],10),self.current_state[2])
 
-                elif action == 2:
-                    return(round(self.current_state[0],10),round(self.current_state[1]+0.1,10),self.current_state[2])
+            elif action == 1:
+                return(round(self.current_state[0]-0.1,10),round(self.current_state[1],10),self.current_state[2])
 
-                elif action == 3:
-                    return(round(self.current_state[0],10),round(self.current_state[1]-0.1,10),self.current_state[2])
+            elif action == 2:
+                return(round(self.current_state[0],10),round(self.current_state[1]+0.1,10),self.current_state[2])
 
-                elif action == 4:
-                    return(round(self.current_state[0]+self.object_size,10),round(self.current_state[1]-self.object_size,10),self.current_state[2]+90)
+            elif action == 3:
+                return(round(self.current_state[0],10),round(self.current_state[1]-0.1,10),self.current_state[2])
 
-                elif action == 5:
-                    return(round(self.current_state[0]-self.object_size,10),round(self.current_state[1]+self.object_size,10),self.current_state[2]-90)
-            else:
-                #print("not valid action")
-                return self.current_state
+            elif action == 4:
+                return(round(self.current_state[0]+self.object_size,10),round(self.current_state[1]-self.object_size,10),self.current_state[2]+90)
+
+            elif action == 5:
+                return(round(self.current_state[0]-self.object_size,10),round(self.current_state[1]+self.object_size,10),self.current_state[2]-90)
         else:
-            #print("state not in qtable")
-            return self.current_state
+            #print("not valid action")
+            return (self.current_state[0],self.current_state[1],self.current_state[2])
+
 
 
     def calculate_reward(self,action,next_state):
-        if(self.current_state==self.goal):
-            print(self.next_state,self.goal)
-            return 1
+        if(self.current_state[0]==self.goal[0] and self.current_state[1]==self.goal[1]  and self.current_state[2]==self.goal[2] ):
+            return 10
 
-        # elif (action==self.prev_action) or (self.prev_action==-1):
-        #     return -
 
-        elif(self.current_state==next_state):
-            return -100
+        elif(action=='hh' or action=='hl' or action=='lh'):
+            return -5
 
         else:
             return -1
+
     def update_start_state(selfself,start):
         return start
 
@@ -281,18 +308,31 @@ class Friction_finger_env:
         self.prev_action = 0
         #self.current_state= (7.0+int(int(np.random.random()*10)/20.0),7.0+int(int(np.random.random()*10)/20.0))
         theta=[-90,0,90]
-        self.start_state = (random.randint(FINGER_START*10,FINGER_END*10)/10.0,random.randint(FINGER_START*10,FINGER_END*10)/10.0,-90)
+        swithching_action=['lh','hl']
+        self.start_state = (random.randint(FINGER_START*10,FINGER_END*10)/10.0,random.randint(FINGER_START*10,FINGER_END*10)/10.0,0,np.random.choice(swithching_action))
         self.current_state=self.start_state
         print("start=",self.start_state)
         # self.goal=  (random.randrange(FINGER_START*10,FINGER_END*10)/10,random.randrange(FINGER_START*10,FINGER_END*10)/10)
         return self.current_state
 
-    def step(self,action):
+    def step(self,a):
+
+        if(a==0):
+            action='l'
+        if (a == 1):
+            action = 'r'
+        if (a == 2):
+            action = 'lh'
+        if (a == 3):
+            action = 'hl'
+        if (a == 4):
+            action = 'hh'
+
         next_state= self.calculate_next_state(action)
         reward = self.calculate_reward(action,next_state)
         self.current_state=next_state
 
-        done= 1 if (self.current_state==self.goal) else 0
+        done= 1 if (self.current_state[0]==self.goal[0] and self.current_state[1]==self.goal[1]  and self.current_state[2]==self.goal[2]) else 0
         self.prev_action = action
         return next_state,reward,done
 

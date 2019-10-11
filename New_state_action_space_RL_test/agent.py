@@ -4,7 +4,7 @@ import random
 import json
 class Agent:
 
-    def __init__(self, nA=6, Bootsrap_policy=False):
+    def __init__(self, nA=4, Bootsrap_policy=False):
         """ Initialize agent.
 
         Params
@@ -16,11 +16,11 @@ class Agent:
             with open('Q_table.txt') as json_file:
                 self.Q = json.load(json_file)
         else:
-            self.Q = defaultdict(lambda: [0,0,0,0,0,0])    #Since we are storing in a json file, using a list instead of numpy arrays
+            self.Q = defaultdict(lambda: [0,0,0,0])    #Since we are storing in a json file, using a list instead of numpy arrays
         self.epsilon=1.0
-        self.epsilon_decay=0.001
-        self.epsilon_min=0.0003
-        self.alpha=0.7
+        self.epsilon_decay=0.00001
+        self.epsilon_min=0.003
+        self.alpha=0.5
         self.gamma=0.995
 
     def update_epsilon(self):
@@ -43,6 +43,7 @@ class Agent:
         =======
         - action: an integer, compatible with the task's action space
         """
+        action_set=('l','r','lh','hl','hh')
         n=np.random.random()
         if n>self.epsilon:
             action=np.argmax(self.Q[str(state)])
