@@ -393,7 +393,7 @@ with open('Policy.txt') as json_file:
     # print(data['(1,2)'])
 
 #Test_cases
-start_state=(11.0, 11.0, -90, 'lh')
+start_state=(7.0, 11.0, -90, 'lh')
 env1=Friction_finger_env(start_state,False)
 current_state=start_state
 action=policy[str(start_state)]

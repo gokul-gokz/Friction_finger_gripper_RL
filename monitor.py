@@ -6,7 +6,7 @@ import csv
 import json
 from matplotlib import pyplot as plt
 max_steps=1000
-def interact(env, agent, num_episodes=10000, window=100):
+def interact(env, agent, num_episodes=100000, window=100):
     """ Monitor agent's performance.
     
     Params
