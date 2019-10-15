@@ -3,28 +3,53 @@
 ### Getting Started
 
 Read this [paper](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/Friction_Finger_Gripper_ICRA_2020%20(26).pdf) to understand more about the environment and description.
+Checkout the dev branch of this repository [WIHM for Variable friction finger using visual servoing and motion planner](https://github.com/gokul-gokz/Variable_friction_finger) to find a working code of VF finger planning and control with Modified A* planner and visual servoing.
+Checkout the master branch, if you just want the driver code for controlling the Variable friction finger gripper.
 
-The repository contains three files:
+Description of files in this repository:
 - `agent.py`:Contains the agent description.
 - `env.py`: Contains the environmet description.
 - `monitor.py`: Conatins the code for interaction between agent and the environment..
 - `main.py`: Run this file in the terminal to check the performance of your agent.
+- `Policy.txt`: Contains the policy for the given environment(specific goal state).
+- `Q_table.txt`: Contains the Q_table for all the state in the state action space.
+- `test_policy.py`: Contains a testing code where any valid start state can be given and based on the polcicy stored in policy.txt, a plan will be generated and plotted.
 
-Begin by running the following command in the terminal:
+Parameter setting and environment description
+1. Set the hyperparameters for the agent in agent.py.  [default values are given here]
+	- epsilon=1.0
+	- epsilon_decay=0.0001
+	- epsilon_min=0.0003
+	- alpha=0.7
+	- gamma=0.995
+ Note: gamma is set using the thumb rule: 1-1/No of steps needed to ccomplete an episode
+
+2. Friction finger environment is defined in env.py which follows the same structure with the paper defined above.
+         - Statespace: (L,R,theta)    (7<=L,R<=12), theta=(-90,0,90)  
+	 - Actionspace: (0-5):Left Slide up, Left Slide Down, Right Slide Up, Right slide Down, Rotate Clockwise, Rotate Antiiclockwise
+
+3. Friction finger environment defined in a new setting.(inside New_state_action_space_RL_test folder)
+	 - Statespace:(x,y,theta,friction_surface_setting)  (7<=L,R<=12), theta=(-90,0,90), friction_surface_setting=('lh','hl','hh')
+	 - Actionspace:(0-4),Actuator left, Actuator right, Set friction 'lh', Set friction 'hl', Set friction 'hh'
+
+4. Friction finger environment for a multi goal setting.(inside Multi_goal_training)
+	 - Statespace:(x,y,theta,friction_surface_setting,(goal_L,goal_R,goal_theta))  (7<=L,R<=12), theta=(-90,0,90), friction_surface_setting=('lh','hl','hh')
+	 - Actionspace:(0-4),Actuator left, Actuator right, Set friction 'lh', Set friction 'hl', Set friction 'hh'
+
+4. Number of episodes and Max_number_of_steps in an episode can be set in monitor.py 
+
+
+Steps to run the code:
 ```
-python main.py
+1. Inside main.py
+	- Create an object for the agent with required hyperparameters.
+	- Create an object for the corresponding environment by defining the goal.
+	- Create an object of monitor defining the number of training episodes and max number of steps in an epsiode. 
+2. Run python main.py  to train the agent.
+3. After the completion of the training, Q_table.txt and Policy.txt will be created.
+4. The generated policy can be tested by specifying any start state in test_policy.py and running the code. A plot will be generated showing the path in cartesian space from start to goal state.
 ```
 
-When you run `main.py`, the agent that you specify in `agent.py` interacts with the environment for 20,000 episodes.  The details of the interaction are specified in `monitor.py`, which returns three variables: `avg_rewards` and `best_avg_reward` and `policy` .
-- `avg_rewards` is a deque where `avg_rewards[i]` is the average (undiscounted) return collected by the agent from episodes `i+1` to episode `i+100`, inclusive.  So, for instance, `avg_rewards[0]` is the average return collected by the agent over the first 100 episodes.
-- `best_avg_reward` is the largest entry in `avg_rewards`.  This is the final score that you should use when determining how well your agent performed in the task.
-- `policy` gives the current policy based on the state action values.
-Your assignment is to modify the `agents.py` file to improve the agent's performance.
 
-- Use the `__init__()` method to define any needed instance variables.  Currently, we define the number of actions available to the agent (`nA`) and initialize the action values (`Q`) to an empty dictionary of arrays.  Feel free to add more instance variables; for example, you may find it useful to define the value of epsilon if the agent uses an epsilon-greedy policy for selecting actions.
-- The `select_action()` method accepts the environment state as input and returns the agent's choice of action.  The default code that we have provided randomly selects an action.
-- The `step()` method accepts a (`state`, `action`, `reward`, `next_state`) tuple as input, along with the `done` variable, which is `True` if the episode has ended.  The default code (which you should certainly change!) increments the action value of the previous state-action pair by 1.  You should change this method to use the sampled tuple of experience to update the agent's knowledge of the problem.
-
-Once you have modified the function, you need only run `python main.py` to test your new agent.
 
   
