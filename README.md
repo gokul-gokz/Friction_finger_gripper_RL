@@ -2,11 +2,11 @@
 
 ### Getting Started
 
-Read this [paper](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/Friction_Finger_Gripper_ICRA_2020%20(26).pdf) to understand more about the environment and description.
-Checkout the dev branch of this repository [WIHM for Variable friction finger using visual servoing and motion planner](https://github.com/gokul-gokz/Variable_friction_finger) to find a working code of VF finger planning and control with Modified A* planner and visual servoing.
-Checkout the master branch, if you just want the driver code for controlling the Variable friction finger gripper.
+- Read this [paper](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/Friction_Finger_Gripper_ICRA_2020%20(26).pdf) to understand about the Friction finger environment.
+- Checkout the dev branch of this repository [WIHM for Variable friction finger using visual servoing and motion planner](https://github.com/gokul-gokz/Variable_friction_finger) to find a working code of VF finger planning and control with Modified A* planner and visual servoing.
+- Checkout the master branch, if you just want the driver code for controlling the Variable friction finger gripper.
 
-Description of files in this repository:
+## Description of files in this repository:
 - `agent.py`:Contains the agent description.
 - `env.py`: Contains the environmet description.
 - `monitor.py`: Conatins the code for interaction between agent and the environment..
@@ -15,7 +15,7 @@ Description of files in this repository:
 - `Q_table.txt`: Contains the Q_table for all the state in the state action space.
 - `test_policy.py`: Contains a testing code where any valid start state can be given and based on the polcicy stored in policy.txt, a plan will be generated and plotted.
 
-Parameter setting and environment description
+## Parameter setting and environment description
 1. Set the hyperparameters for the agent in agent.py.  [default values are given here]
 	- epsilon=1.0
 	- epsilon_decay=0.0001
@@ -39,8 +39,7 @@ Parameter setting and environment description
 4. Number of episodes and Max_number_of_steps in an episode can be set in monitor.py 
 
 
-Steps to run the code:
-```
+## Steps to run the code:
 1. Inside main.py
 	- Create an object for the agent with required hyperparameters.
 	- Create an object for the corresponding environment by defining the goal.
@@ -48,7 +47,7 @@ Steps to run the code:
 2. Run python main.py  to train the agent.
 3. After the completion of the training, Q_table.txt and Policy.txt will be created.
 4. The generated policy can be tested by specifying any start state in test_policy.py and running the code. A plot will be generated showing the path in cartesian space from start to goal state.
-```
+
 
 
 
