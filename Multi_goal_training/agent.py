@@ -18,9 +18,9 @@ class Agent:
         else:
             self.Q = defaultdict(lambda: [0,0,0,0,0])    #Since we are storing in a json file, using a list instead of numpy arrays
         self.epsilon=1.0
-        self.epsilon_decay=0.0001
-        self.epsilon_min=0.0003
-        self.alpha=0.7
+        self.epsilon_decay=0.0000000001
+        self.epsilon_min=0.00003
+        self.alpha=0.5
         self.gamma=0.995
 
     def update_epsilon(self):

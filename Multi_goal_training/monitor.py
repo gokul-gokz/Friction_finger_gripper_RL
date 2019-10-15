@@ -5,7 +5,7 @@ import numpy as np
 import csv
 import json
 from matplotlib import pyplot as plt
-max_steps=700
+max_steps=500
 def interact(env, agent, num_episodes=100000, window=100):
     """ Monitor agent's performance.
     
@@ -73,7 +73,7 @@ def interact(env, agent, num_episodes=100000, window=100):
         print("\rEpisode {}/{} || Best average reward {}".format(i_episode, num_episodes, best_avg_reward), end="")
         sys.stdout.flush()
         # check if task is solved (according to OpenAI Gym)
-        if best_avg_reward >= 25.0 or i_episode==num_episodes:
+        if best_avg_reward >= -100.0 or i_episode==num_episodes:
             print(len(avg_rewards))
             print(len(list(range(0, 200))))
 
@@ -111,8 +111,7 @@ def interact(env, agent, num_episodes=100000, window=100):
             # plt.plot(avg_rewards)
             # plt.show()
             #break
-        if i_episode == num_episodes: print('\n')
-    print
-    plt.plot(errors)
-    plt.show()
+
+    # plt.plot(errors)
+    # plt.show()
     return avg_rewards, best_avg_reward,policy

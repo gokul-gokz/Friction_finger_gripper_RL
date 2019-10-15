@@ -177,7 +177,7 @@ def limit_check(left_pos, right_pos, orientation,action,OBJECT_SIZE):
 
 #Friction Finger gripper environment
 class Friction_finger_env:
-    def __init__(self,start=(7.0,7.0,0,'lh'),action_table_load=true,object_s=OBJECT_SIZE,low_limit=FINGER_START,high_limit=FINGER_END):
+    def __init__(self,start=(7.0,7.0,0,'lh',(11,11,0)),action_table_load=true,object_s=OBJECT_SIZE,low_limit=FINGER_START,high_limit=FINGER_END):
         self.finger_low_limit=low_limit
         self.finger_high_limit=high_limit
         self.start_state=start
@@ -194,7 +194,7 @@ class Friction_finger_env:
         self.reward=0
         self.done=0
         self.prev_action=-1
-        self.goal=(7.2,7.2,90)
+        self.goal=self.start_state[4]
 
         #Action list
         # 1 -> Left slide up
@@ -239,29 +239,28 @@ class Friction_finger_env:
         #print(self.current_state)
         if high_level_action=='r' and self.current_state[3]=='lh':
             low_state = self.calculate_low_level_state(0)
-            return(low_state[0],low_state[1],low_state[2],'lh')
+            return(low_state[0],low_state[1],low_state[2],'lh',self.goal)
         elif high_level_action=='l' and self.current_state[3]=='lh':
             low_state = self.calculate_low_level_state(1)
-            return(low_state[0],low_state[1],low_state[2],'lh')
+            return(low_state[0],low_state[1],low_state[2],'lh',self.goal)
         elif high_level_action=='l' and self.current_state[3]=='hl':
             low_state = self.calculate_low_level_state(2)
-            return(low_state[0],low_state[1],low_state[2],'hl')
+            return(low_state[0],low_state[1],low_state[2],'hl',self.goal)
         elif high_level_action=='r' and self.current_state[3]=='hl':
             low_state = self.calculate_low_level_state(3)
-            return(low_state[0],low_state[1],low_state[2],'hl')
+            return(low_state[0],low_state[1],low_state[2],'hl',self.goal)
         elif high_level_action=='l' and self.current_state[3]=='hh':
             low_state = self.calculate_low_level_state(5)
-            return(low_state[0],low_state[1],low_state[2],'hh')
+            return(low_state[0],low_state[1],low_state[2],'hh',self.goal)
         elif high_level_action=='r' and self.current_state[3]=='hh':
             low_state = self.calculate_low_level_state(4)
-            return(low_state[0],low_state[1],low_state[2],'hh')
+            return(low_state[0],low_state[1],low_state[2],'hh',self.goal)
         elif high_level_action == 'lh':
-            return (self.current_state[0],self.current_state[1],self.current_state[2], 'lh')
+            return (self.current_state[0],self.current_state[1],self.current_state[2], 'lh',self.goal)
         elif high_level_action == 'hl':
-
-            return (self.current_state[0],self.current_state[1],self.current_state[2], 'hl')
+            return (self.current_state[0],self.current_state[1],self.current_state[2], 'hl',self.goal)
         elif high_level_action == 'hh':
-            return (self.current_state[0],self.current_state[1],self.current_state[2], 'hh')
+            return (self.current_state[0],self.current_state[1],self.current_state[2], 'hh',self.goal)
 
     def calculate_low_level_state(self,action):
         if action in self.valid_Actions[str(self.current_state[0:3])]:
@@ -292,14 +291,14 @@ class Friction_finger_env:
 
     def calculate_reward(self,action,next_state):
         if(self.current_state[0]==self.goal[0] and self.current_state[1]==self.goal[1]  and self.current_state[2]==self.goal[2] ):
-            return 50
+            return 10
 
 
         elif(action=='hh' or action=='hl' or action=='lh'):
-            return -30
+            return -5
 
         else:
-            return -(abs(self.current_state[0]-self.goal[0])+abs(self.current_state[1]-self.goal[1]) + (abs(self.current_state[2]-self.goal[2])/90)*OBJECT_SIZE if abs(self.current_state[1]-self.goal[1]) else 0)
+            return -1
 
     def update_start_state(selfself,start):
         return start
@@ -308,15 +307,17 @@ class Friction_finger_env:
         self.done = 0
         self.prev_action = 0
         #self.current_state= (7.0+int(int(np.random.random()*10)/20.0),7.0+int(int(np.random.random()*10)/20.0))
+        #theta=[-90,0,90]
         theta=[-90,0,90]
         swithching_action=['lh','hl','hh']
-        self.start_state = (random.randint(FINGER_START*10,FINGER_END*10)/10.0,random.randint(FINGER_START*10,FINGER_END*10)/10.0,np.random.choice(theta),np.random.choice(swithching_action))
-        # self.goal = (random.randint(FINGER_START * 10, FINGER_END * 10) / 10.0,
-        #                     random.randint(FINGER_START * 10, FINGER_END * 10) / 10.0, np.random.choice(theta))
+        self.goal = (random.randint(FINGER_START * 10, FINGER_END * 10) / 10.0,
+                     random.randint(FINGER_START * 10, FINGER_END * 10) / 10.0, np.random.choice(theta))
+        self.start_state = (random.randint(FINGER_START*10,FINGER_END*10)/10.0,random.randint(FINGER_START*10,FINGER_END*10)/10.0,np.random.choice(theta),np.random.choice(swithching_action),self.goal)
+
 
         self.current_state=self.start_state
         print("start=",self.start_state)
-        # self.goal=  (random.randrange(FINGER_START*10,FINGER_END*10)/10,random.randrange(FINGER_START*10,FINGER_END*10)/10)
+
         return self.current_state
 
     def step(self,a):
@@ -336,7 +337,7 @@ class Friction_finger_env:
         reward = self.calculate_reward(action,next_state)
         self.current_state=next_state
 
-        done= 1 if (self.current_state[0]==self.goal[0] and self.current_state[1]==self.goal[1]  and self.current_state[2]==self.goal[2]) else 0
+        done= 1 if (self.current_state[0]==self.goal[0] and self.current_state[1]==self.goal[1]  and self.current_state[2]==self.goal[2] and self.current_state[4]==self.goal) else 0
         self.prev_action = action
         return next_state,reward,done
 
