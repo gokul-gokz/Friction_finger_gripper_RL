@@ -78,11 +78,11 @@ Goal Pose: (7.9,7.2,90)
 
 ## Future Directions:
 ### Multi_goal_training:
-1. [Hindsight Experience replay] (https://papers.nips.cc/paper/7090-hindsight-experience-replay.pdf)
-2. [Curisoity Driven Rl] (https://pathak22.github.io/noreward-rl/resources/icml17.pdf)
-3. [Reinforcement learning with unsipervised auxilary tasks] (https://arxiv.org/abs/1611.05397)
-4. [Challenges in Multi_goal_training] (https://matthiasplappert.com/publications/2018_Plappert_MultiGoalRL.pdf)
-5. [Solving Rubik cube with robot hand] (https://openai.com/blog/solving-rubiks-cube/)
+1. [Hindsight_Experience_replay] (https://papers.nips.cc/paper/7090-hindsight-experience-replay.pdf)
+2. [Curisoity_Driven_Rl] (https://pathak22.github.io/noreward-rl/resources/icml17.pdf)
+3. [Reinforcement_learning_with_unsipervised_auxilary_tasks] (https://arxiv.org/abs/1611.05397)
+4. [Challenges_in_Multi_goal_training] (https://matthiasplappert.com/publications/2018_Plappert_MultiGoalRL.pdf)
+5. [Solving_Rubik_cube_with_robot_hand] (https://openai.com/blog/solving-rubiks-cube/)
 
 
 
