@@ -48,7 +48,11 @@
 3. After the completion of the training, Q_table.txt and Policy.txt will be created.
 4. The generated policy can be tested by specifying any start state in test_policy.py and running the code. A plot will be generated showing the path in cartesian space from start to goal state.
 
-
+## Comparsion of path:RL vs Weighed A*:
+### Test1:
+Start Pose: (10.6,7.9,-90)
+Goal Pose: (7.9,7.2,90)
+![RL path](New_state_action_space_RL_test\Data\Q-learning\Test1.jpg)
 
 
   
