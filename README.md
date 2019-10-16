@@ -56,7 +56,7 @@ Goal Pose: (7.9,7.2,90)
 ![RL path](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/New_state_action_space_RL_test/Data/Q-learning/Test1.png)
 
 #### MP policy
-![MP path](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/New_state_action_space_RL_test/Data/Q-learning/MP_Test1.png)
+![MP path](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/New_state_action_space_RL_test/Data/Q-learning/MP_test1.png)
 
 ### Test2:
 Start Pose: (7.9,7.2,-90)
