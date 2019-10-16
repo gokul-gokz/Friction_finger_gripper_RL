@@ -194,7 +194,7 @@ class Friction_finger_env:
         self.reward=0
         self.done=0
         self.prev_action=-1
-        self.goal=(7.2,7.2,90)
+        self.goal=(7.9,7.2,90)
 
         #Action list
         # 1 -> Left slide up
@@ -292,14 +292,14 @@ class Friction_finger_env:
 
     def calculate_reward(self,action,next_state):
         if(self.current_state[0]==self.goal[0] and self.current_state[1]==self.goal[1]  and self.current_state[2]==self.goal[2] ):
-            return 50
+            return 1000
 
 
         elif(action=='hh' or action=='hl' or action=='lh'):
-            return -30
+            return -5
 
         else:
-            return -(abs(self.current_state[0]-self.goal[0])+abs(self.current_state[1]-self.goal[1]) + (abs(self.current_state[2]-self.goal[2])/90)*OBJECT_SIZE if abs(self.current_state[1]-self.goal[1]) else 0)
+            return -1
 
     def update_start_state(selfself,start):
         return start
