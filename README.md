@@ -52,7 +52,32 @@
 ### Test1:
 Start Pose: (10.6,7.9,-90)
 Goal Pose: (7.9,7.2,90)
-![RL path](New_state_action_space_RL_test\Data\Q-learning\Test1.jpg)
+#### RL policy
+![RL path](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/New_state_action_space_RL_test/Data/Q-learning/Test1.png)
+
+#### MP policy
+![MP path](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/New_state_action_space_RL_test/Data/Q-learning/Test4.png)
+
+### Test2:
+Start Pose: (7.9,7.2,-90)
+Goal Pose: (7.9,7.2,90)
+#### RL policy
+![RL path](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/New_state_action_space_RL_test/Data/Q-learning/Test2.png)
+
+#### MP policy
+![MP path](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/New_state_action_space_RL_test/Data/Q-learning/Test5.png)
+
+### Test3:
+Start Pose: (7.0,7.0,-90)
+Goal Pose: (7.9,7.2,90)
+#### RL policy
+![RL path](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/New_state_action_space_RL_test/Data/Q-learning/Test3.png)
+
+#### MP policy
+![MP path](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/New_state_action_space_RL_test/Data/Q-learning/Test6.png)
+
+
+
 
 
   
