@@ -76,6 +76,13 @@ Goal Pose: (7.9,7.2,90)
 #### MP policy
 ![MP path](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/New_state_action_space_RL_test/Data/Q-learning/Test6.png)
 
+## Future Directions:
+### Multi_goal_training:
+1. [Hindsight Experience replay] (https://papers.nips.cc/paper/7090-hindsight-experience-replay.pdf)
+2. [Curisoity Driven Rl] (https://pathak22.github.io/noreward-rl/resources/icml17.pdf)
+3. [Reinforcement learning with unsipervised auxilary tasks] (https://arxiv.org/abs/1611.05397)
+4. [Challenges in Multi_goal_training] (https://matthiasplappert.com/publications/2018_Plappert_MultiGoalRL.pdf)
+5. [Solving Rubik cube with robot hand] (https://openai.com/blog/solving-rubiks-cube/)
 
 
 
