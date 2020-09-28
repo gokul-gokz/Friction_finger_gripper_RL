@@ -7,9 +7,9 @@ MAX_EPISODE: 10
 MAX_STEPS: 250
 HER_ENABLE: True
 FUTURE_K: 4
-BOOTSTRAP: False
-TABLE_GEN: False
-MODE: 0  # 0 -train 1- test 2- plot
+BOOTSTRAP: False #Set this to true when you want to bootstrap the training from a existing policy
+TABLE_GEN: False #Set this to true when you want to generate a new valid action table for a object size
+MODE: 1  # 0 -train 1- test 2- plot
 ACTION_TABLE_PATH: './Valid_action_table.txt'
 NETWORK_PATH: './checkpoint11.pth'
 R_PLOT_PATH:  './Reward10.png'
@@ -26,7 +26,7 @@ FC1_units: 64
 FC2_units: 64
 BUFFER_SIZE: 1000000  # replay buffer size
 BATCH_SIZE: 256  # minibatch size
-GAMMA: 0.95  # discount factor
+GAMMA: 0.95  #it discount factor
 TAU: 1e-3  # for soft update of target parameters
 LR: 0.001  # learning rate
 UPDATE_EVERY: 10  # how often to update the network

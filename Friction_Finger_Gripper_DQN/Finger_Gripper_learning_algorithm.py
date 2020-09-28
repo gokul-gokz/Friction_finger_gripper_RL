@@ -438,7 +438,7 @@ if __name__ == '__main__':
     
     options=['TRAIN', 'TEST', 'PLOT']
     command= param_list['MODE']
-    command= 2
+    # command= 2
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(device)
