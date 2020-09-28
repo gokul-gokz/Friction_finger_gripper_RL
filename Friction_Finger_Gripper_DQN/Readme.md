@@ -9,6 +9,9 @@ Create a virtual environment with python 2.7 and with the following dependencies
 4. sympy
 5. numpy
 6. tensorboard
+7. scipy
+8. random
+9. gym
 
 ## Description of files in this repository:
 - `dqn_agent_HER.py`:Contains the agent description.
@@ -37,6 +40,15 @@ Note: The current action table in the repository can be used for differnet objec
 1. Set the parameters in the params.yaml
 2. Run the main.py
 
+## Example Test plot
+Start Pose: (7.9,7.2,-90)
+Goal Pose: (7.9,7.2,0)
+
+#### DQN policy
+![RL path](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/New_state_action_space_RL_test/Data/Q-learning/Test2.png)
+
+The path.txt file inside the PLOTS folder stores the path(coordinates in Finger space) in the format of text file.
+ 
 ## Things to do
 1. Remove the global variable and rewrite the code structure in a better way.  
 2. Rewrite parts of the code to make it readable
