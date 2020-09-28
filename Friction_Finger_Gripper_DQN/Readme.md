@@ -33,6 +33,13 @@ Whenever object size changes, need to create a valid action table. Set the corre
 
 Note: The current action table in the repository can be used for differnet object sizes as well but the resulting policy might not be optimal.
 
+## Running the code
+1. Set the parameters in the params.yaml
+2. Run the main.py
+
 ## Things to do
-Remove the global variable and rewrite the code structure in a better way.  
+1. Remove the global variable and rewrite the code structure in a better way.  
+2. Rewrite parts of the code to make it readable
+3. Move the plotting functions in the main.py to a different file
+
 

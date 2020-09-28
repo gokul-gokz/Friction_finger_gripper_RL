@@ -136,10 +136,10 @@
     </configuration>
     <list>
       <item itemvalue="Python.DQN" />
+      <item itemvalue="Python.python2" />
+      <item itemvalue="Python.Unnamed" />
       <item itemvalue="Python.FFG_DQN" />
       <item itemvalue="Python.Finger_Gripper_learning_algorithm" />
-      <item itemvalue="Python.Unnamed" />
-      <item itemvalue="Python.python2" />
     </list>
     <recent_temporary>
       <list>
