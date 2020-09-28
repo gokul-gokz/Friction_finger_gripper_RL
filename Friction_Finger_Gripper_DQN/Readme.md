@@ -45,7 +45,7 @@ Start Pose: (7.9,7.2,-90)
 Goal Pose: (7.9,7.2,0)
 
 #### DQN policy
-![RL path](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/master/New_state_action_space_RL_test/Data/Q-learning/Test2.png)
+![RL path](https://github.com/gokul-gokz/Friction_finger_gripper_RL/blob/DQN/Friction_Finger_Gripper_DQN/PLOTS/Figure_1.png)
 
 The path.txt file inside the PLOTS folder stores the path(coordinates in Finger space) in the format of text file.
  
